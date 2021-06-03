@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { FakedHoverProvider } from './hoverProvider';
 import { MathTestController } from './testController';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -9,5 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
       await vscode.test.runTests({ tests: tests instanceof Array ? tests : [tests], debug: false });
       vscode.window.showInformationMessage('Test run complete');
     }),
+
+    vscode.languages.registerHoverProvider({scheme: "file"}, new FakedHoverProvider()),
   );
 }

@@ -315,9 +315,12 @@ class TestCase {
     if (actual === this.expected) {
       options.setState(this.item, vscode.TestResultState.Passed, duration);
     } else {
-      const message = vscode.TestMessage.diff(`Expected ${this.item.label}`, String(this.expected), String(actual));
-      message.location = new vscode.Location(this.item.uri!, this.item.range!);
-      options.appendMessage(this.item, message);
+      const markdownString = new vscode.MarkdownString();
+      markdownString.isTrusted = true;
+      markdownString.appendText("this is just a fake lonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnng [message](https://github.com/microsoft/vscode/issues/123927#issuecomment-853149197)");
+      const testMessage = new vscode.TestMessage(markdownString);
+      testMessage.location = new vscode.Location(this.item.uri!, this.item.range!);
+      options.appendMessage(this.item, testMessage);
       options.setState(this.item, vscode.TestResultState.Failed, duration);
     }
   }

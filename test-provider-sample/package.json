@@ -1,4 +1,5 @@
 {
+	"enableProposedApi": true,
 	"name": "test-provider-sample",
 	"displayName": "test-provider-sample",
 	"description": "Sample showing how to use the test APIs",
