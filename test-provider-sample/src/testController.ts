@@ -312,14 +312,35 @@ class TestCase {
 
     console.log('run', this.item.label);
 
-    if (actual === this.expected) {
-      options.setState(this.item, vscode.TestResultState.Passed, duration);
-    } else {
-      const message = vscode.TestMessage.diff(`Expected ${this.item.label}`, String(this.expected), String(actual));
-      message.location = new vscode.Location(this.item.uri!, this.item.range!);
-      options.appendMessage(this.item, message);
-      options.setState(this.item, vscode.TestResultState.Failed, duration);
-    }
+    const child1 = vscode.test.createTestItem<TestCase>({
+      id: `mktests/${this.item.uri!.toString()}/${this.item.label}#1`,
+      label: this.item.label,
+      uri: this.item.uri!,
+    });
+    child1.range = this.item.range;
+    this.item.addChild(child1);
+    const message = vscode.TestMessage.diff(`Expected ${this.item.label}`, String(this.expected), String(actual));
+    message.location = new vscode.Location(this.item.uri!, this.item.range!);
+    options.appendMessage(child1, message);
+    options.setState(child1, vscode.TestResultState.Failed, duration);
+
+    const child2 = vscode.test.createTestItem<TestCase>({
+      id: `mktests/${this.item.uri!.toString()}/${this.item.label}#2`,
+      label: this.item.label,
+      uri: this.item.uri!,
+    });
+    child2.range = this.item.range;
+    this.item.addChild(child2);
+    options.setState(child2, vscode.TestResultState.Passed, duration);
+
+    // if (actual === this.expected) {
+    //   options.setState(this.item, vscode.TestResultState.Passed, duration);
+    // } else {
+    //   const message = vscode.TestMessage.diff(`Expected ${this.item.label}`, String(this.expected), String(actual));
+    //   message.location = new vscode.Location(this.item.uri!, this.item.range!);
+    //   options.appendMessage(this.item, message);
+    //   options.setState(this.item, vscode.TestResultState.Failed, duration);
+    // }
   }
 
   private evaluate() {
